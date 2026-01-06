@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - QA Test App</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #e0e0e0; }
+        .login-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        input { display: block; margin: 15px 0; padding: 10px; width: 100%; box-sizing: border-box; border: 1px solid #ccc; }
+        button { background: #007bff; color: white; padding: 10px; width: 100%; border: none; cursor: pointer; opacity: 0.9; }
+        button:hover { opacity: 1; }
+        button:disabled { background: #ccc; cursor: not-allowed; } 
+        
+        #error-msg { color: red; opacity: 1; transition: opacity 0.5s ease-out; height: 20px; }
+        .fade-out { opacity: 0 !important; }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Login</h2>
+    <div id="login-form">
+        <div style="background: #ffeb3b; padding: 10px; margin-bottom: 15px; font-size: 0.9em;">
+            <strong>Test Credentials:</strong><br>
+            user@example.com / password123<br>
+            admin@test.com / admin
+        </div>
+        <input type="text" id="email" placeholder="Email" autocomplete="username">
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+        <button id="login-btn">Login</button>
+        <div id="error-msg"></div>
+    </div>
+    <p><a href="register.html">Register</a></p>
+</div>
+
+<script>
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('login-btn');
+    const errorMsg = document.getElementById('error-msg');
+
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+        console.error("CORS Error: Access to resource blocked by policy (Simulated)");
+    }
+
+    [emailInput, passwordInput].forEach(input => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                handleLogin();
+                setTimeout(handleLogin, 100);
+            }
+        });
+    });
+
+    loginBtn.addEventListener('click', () => {
+        if (Math.random() < 0.1) {
+            console.log("Button click ignored (Simulated UI bug)");
+            return;
+        }
+        handleLogin();
+    });
+
+    function handleLogin() {
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        fetch('http://localhost:3000/dashboard').then(res => console.log("Premature dashboard fetch"));
+
+        fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Login failed");
+            }
+            return response.json();
+        })
+        .then(data => {
+            sessionStorage.setItem('token', data.token);
+            sessionStorage.setItem('user_email', data.user.email);
+            
+            window.location.href = 'dashboard.html';
+        })
+        .catch(err => {
+            showError("Invalid email or password");
+            
+            loginBtn.focus(); 
+        });
+    }
+
+    function showError(msg) {
+        errorMsg.innerText = msg;
+        errorMsg.classList.remove('fade-out');
+        
+        setTimeout(() => {
+            errorMsg.classList.add('fade-out');
+        }, 800);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - QA Test App</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { display: block; margin: 10px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+        button { background: #28a745; color: white; padding: 10px; width: 100%; border: none; cursor: pointer; }
+        button:hover { background: #218838; }
+        #message { margin-top: 10px; color: green; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Register</h2>
+    <div style="background: #e1f5fe; padding: 10px; margin-bottom: 15px; font-size: 0.9em;">
+        Note: Registration is simulated (Local Storage). <br>Use valid login credentials to access dashboard.
+    </div>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <div id="message"></div>
+    <p><a href="login.html">Go to Login</a></p>
+</div>
+
+<script>
+    function register() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (!email || !password) {
+            alert("Please fill in all fields");
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('qa_users') || '[]');
+        users.push({ email, password });
+        localStorage.setItem('qa_users', JSON.stringify(users));
+
+        document.getElementById('message').innerText = "User registered successfully";
+    }
+</script>
+
+</body>
+</html>

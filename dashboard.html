@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - QA Test App</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #eef; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 5px; }
+        .content { margin-top: 20px; background: white; padding: 20px; border-radius: 5px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Dashboard</h1>
+    <span id="user-display">Guest</span>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="content">
+    <h3>Welcome to the secure area</h3>
+    <div id="data-container">Loading...</div>
+</div>
+
+<script>
+    setTimeout(() => {
+        const token = sessionStorage.getItem('token'); 
+        if (!token) {
+             window.location.href = 'login.html'; 
+        }
+    }, 3000);
+
+    const userEmail = sessionStorage.getItem('user_email');
+    if (userEmail) {
+        document.getElementById('user-display').innerText = userEmail;
+    }
+
+    fetch('http://localhost:3000/dashboard')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('data-container');
+            container.innerHTML = `
+                <p>${data.message}</p>
+                <ul>
+                    ${data.data.map(item => `<li>${item.value}</li>`).join('')}
+                </ul>
+                <small>Server Time: ${data.timestamp}</small>
+            `;
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('data-container').innerText = "Failed to load data";
+        });
+
+    function logout() {
+        sessionStorage.removeItem('user_email');
+        window.location.href = 'login.html';
+    }
+</script>
+
+</body>
+</html>
