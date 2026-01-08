@@ -30,7 +30,7 @@
         <button id="login-btn">Login</button>
         <div id="error-msg"></div>
     </div>
-    <p><a href="register.html">Register</a></p>
+    <p><a href="/register">Register</a></p>
 </div>
 
 <script>
@@ -83,7 +83,7 @@
             sessionStorage.setItem('token', data.token);
             sessionStorage.setItem('user_email', data.user.email);
             
-            window.location.href = 'dashboard.html';
+            window.location.href = '/dashboard';
         })
         .catch(err => {
             showError("Invalid email or password");
