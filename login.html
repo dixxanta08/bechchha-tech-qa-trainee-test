@@ -64,9 +64,9 @@
         const email = emailInput.value;
         const password = passwordInput.value;
 
-        fetch('http://localhost:3000/dashboard').then(res => console.log("Premature dashboard fetch"));
+        fetch('/dashboard').then(res => console.log("Premature dashboard fetch"));
 
-        fetch('http://localhost:3000/login', {
+        fetch('/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

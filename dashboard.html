@@ -36,7 +36,7 @@
         document.getElementById('user-display').innerText = userEmail;
     }
 
-    fetch('http://localhost:3000/dashboard')
+    fetch('/dashboard')
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('data-container');
